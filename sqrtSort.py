@@ -1,5 +1,4 @@
 from math import floor
-import scipy as sp
 import numpy as np
 import heapq as hp
 import random
@@ -34,64 +33,64 @@ def bubble_sort(lista):
         trocou = True
     if not trocou:
       break
-        
+   
 def ordena_bubbleSort(lista, tamanho):
     resultado = []
-    maiores = []
+    maior = 0
     index = 0
     for i in range(len(lista)):
         bubble_sort(lista[i])
-        maiores.append((lista[i][-1], i))
     for i in range(tamanho):
-        bubble_sort(maiores) #the dark one
-        index = maiores[-1][1]
-        maiores.pop()
-        resultado.append(lista[index].pop())
-        if(lista[index] == []):
-            continue
-        maiores.append((lista[index][-1], index))
+        for j in range(len(lista)):
+            if(lista[j] == []):
+                continue
+            if(maior < lista[j][-1]):
+                maior = lista[j][-1]
+                index = j
+        maior = 0
+        if(lista[index] != []):
+            resultado.append(lista[index].pop())
     resultado.reverse()
     return resultado
 
 
+
 def ordena_heap(lista,tamanho):
-	maiores = []
-	resultado = []
-	print(lista)
-	for i in range(len(lista)):
-		hp._heapify_max(lista[i])
-		hp.heappush(maiores, hp._heappop_max(lista[i]))
-	for i in range(tamanho):
-		hp.heappush(resultado,hp._heappop_max(maiores))
-	print(lista)
-	print(maiores)
-    print(resultado)
-	#for que vai passar pelas heaps pegando os maiores
-	#for que vai tirar o maior(ou menor) da heap de maiores para a heap de resultados
-	#trazer o maior da heaps de parte de onde o maior saiu
-	#repeat?
+    maior = 0
+    index = 0
+    resultado = []
+    #hp._heapify_max(resultado)
+    for i in range(len(lista)):
+        hp._heapify_max(lista[i])
+    for i in range(tamanho):
+        for j in range(len(lista)):
+            if(lista[j] == []):
+                continue
+            elif(maior < lista[j][0]):
+                maior = lista[j][0]
+                index = j
+        if(lista[index] == []):
+            continue
+        hp._heappop_max(lista[index])
+        #hp.heappush(resultado, maior)
+        resultado.append(maior)
+        maior = 0
+    #hp._heapify_max(resultado)
+    resultado.reverse()
+    return resultado
+
 
  
 if __name__ == '__main__':
     entrada = [4, 6, 1, 19, 125, 5968, 26, 760, 16, 2, 3, 4, 3]
-    entrada_random = random.sample(range(0,100000), 100000)
-    #print(entrada_random)
-    tamanho = len(entrada)
+    entrada_random = random.sample(range(0,1000000), 1000000)
+    #print(entrada)
+    tamanho = len(entrada_random)
 
 		
-    #start = time.time()
-    #partes = listAllocation(entrada_random, tamanho)
-    #resultado = ordena_bubbleSort(partes, tamanho)
-    #end = time.time()
-    #print(resultado)
-    #print(end - start)
-
     start = time.time()
-    partes = listAllocation(entrada, tamanho)
-    ordena_heap(partes, tamanho)
+    partes = listAllocation(entrada_random, tamanho)
+    resultado = ordena_heap(partes, tamanho)
     end = time.time()
-
-#print(round(np.sqrt(tamanho))) # Tamanho das partes
-#print((tamanho % floor(np.sqrt(tamanho)))) # Tamanho da última parte
-## entrada = [4, 6, 1, 19, 125, 5968, 26, 760, 16, 2]
-## partes = [[4,6,1],[19,125,5968],[26,760,16],[2]]
+    #print(resultado)
+    print(end - start)
